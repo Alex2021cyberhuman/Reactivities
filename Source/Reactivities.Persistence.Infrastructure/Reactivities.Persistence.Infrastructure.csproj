@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Bogus" Version="33.0.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.5" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.5" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Reactivities.Domain\Reactivities.Domain.csproj" />
+      <ProjectReference Include="..\Reactivities.Persistence\Reactivities.Persistence.csproj" />
+    </ItemGroup>
+
+</Project>
