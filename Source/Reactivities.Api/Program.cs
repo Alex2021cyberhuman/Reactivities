@@ -1,6 +1,5 @@
 namespace Reactivities.Api
 {
-    using System;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
@@ -9,7 +8,7 @@ namespace Reactivities.Api
     {
         public static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            using var host = CreateHostBuilder(args).Build();
             await host.StartAsync();
             await host.WaitForShutdownAsync();
         }

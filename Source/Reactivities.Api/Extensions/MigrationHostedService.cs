@@ -1,11 +1,11 @@
-﻿namespace Reactivities.Persistence.Infrastructure
+﻿namespace Reactivities.Api.Infrastructure
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Interfaces;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Persistence.Infrastructure.Interfaces;
 
     internal class MigrationHostedService : IHostedService
     {

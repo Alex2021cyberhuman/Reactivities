@@ -1,11 +1,10 @@
 ﻿namespace Reactivities.Persistence.Infrastructure
 {
-    using System;
     using System.Threading.Tasks;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
 
-    internal sealed class MigrationService : IMigrationService
+    public sealed class MigrationService : IMigrationService
     {
         private readonly DataContext _context;
         private readonly IDataCreator _data;

@@ -6,7 +6,7 @@
     using Domain;
     using Interfaces;
 
-    internal class FakeDataCreator : IDataCreator
+    public class FakeDataCreator : IDataCreator
     {
         private List<Activity> _activities;
 

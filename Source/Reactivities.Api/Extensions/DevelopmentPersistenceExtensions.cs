@@ -1,12 +1,13 @@
-﻿namespace Reactivities.Persistence.Infrastructure
+﻿namespace Reactivities.Api.Infrastructure
 {
     using System;
-    using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
+    using Persistence;
+    using Persistence.Infrastructure;
+    using Persistence.Infrastructure.Interfaces;
 
     public static class DevelopmentPersistenceExtensions
     {
