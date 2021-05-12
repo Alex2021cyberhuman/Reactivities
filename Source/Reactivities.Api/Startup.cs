@@ -1,11 +1,13 @@
 namespace Reactivities.Api
 {
+    using System.Reflection;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Infrastructure;
+    using MediatR;
 
     public class Startup
     {
@@ -28,7 +30,8 @@ namespace Reactivities.Api
                         });
                 })
                 .AddDevelopmentPersistence()
-                .AddConfiguredCors(_configuration);
+                .AddConfiguredCors(_configuration)
+                .AddMediatR(Assembly.Load("Reactivities.Application"));
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
