@@ -3,8 +3,10 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Domain;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
     using Persistence;
 
     public class Edit
@@ -26,16 +28,19 @@
         public class CommandHandler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-
-            public CommandHandler(DataContext context)
+            private readonly IMapperBase _mapper;
+            
+            public CommandHandler(DataContext context, IMapperBase mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }        
             
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                request.ActivityToEdit.Id = request.Id;
-                _context.Activities.Update(request.ActivityToEdit);
+                var oldActivity = await _context.Activities.FirstOrDefaultAsync(a => a.Id ==  request.Id, cancellationToken);
+                var updatedActivity = _mapper.Map(request.ActivityToEdit, oldActivity);
+                _context.Activities.Update(updatedActivity);
                 await _context.SaveChangesAsync(cancellationToken);
                 return Unit.Value;
             }
