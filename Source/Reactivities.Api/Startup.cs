@@ -31,7 +31,8 @@ namespace Reactivities.Api
                 })
                 .AddDevelopmentPersistence()
                 .AddConfiguredCors(_configuration)
-                .AddMediatR(Assembly.Load("Reactivities.Application"));
+                .AddMediatR(Assembly.Load("Reactivities.Application"))
+                .AddAutoMapper(expression => expression.AddMaps(Assembly.Load("Reactivities.Application")));
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

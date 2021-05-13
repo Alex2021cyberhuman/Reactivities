@@ -28,9 +28,9 @@
         public class CommandHandler : IRequestHandler<Command>
         {
             private readonly DataContext _context;
-            private readonly IMapperBase _mapper;
+            private readonly IMapper _mapper;
             
-            public CommandHandler(DataContext context, IMapperBase mapper)
+            public CommandHandler(DataContext context, IMapper mapper)
             {
                 _context = context;
                 _mapper = mapper;
