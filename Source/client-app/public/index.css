@@ -1,6 +1,10 @@
-﻿.fs-8 {
-    font-size: .5rem!important;
+﻿.navbar-gradient {
+    background: linear-gradient(90deg, #00d2ff 0%, #3a47d5 100%)!important;
 }
-.fs-7 {
-    font-size: .75rem!important;
+
+.container-background {
+    background: linear-gradient(-90deg, #e3ffe7 0%, #d9e7ff 100%);
+    height: 100vh;
+    box-sizing: border-box;
+    overflow: auto;
 }

@@ -1,4 +1,5 @@
 ﻿interface Activity {
+    venue: string;
     id: string;
     title: string;
     date: Date;
@@ -14,7 +15,8 @@ export const empty = () => {
         date: new Date(),
         category: '',
         description: '',
-        city: ''
+        city: '',
+        venue: ''
     }
     return activity;
 }

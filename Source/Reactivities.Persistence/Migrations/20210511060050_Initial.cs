@@ -16,7 +16,8 @@ namespace Reactivities.Persistence.Migrations
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Category = table.Column<string>(type: "TEXT", nullable: true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
-                    City = table.Column<string>(type: "TEXT", nullable: true)
+                    City = table.Column<string>(type: "TEXT", nullable: true),
+                    Venue = table.Column<string>(type: "TEXT", nullable: true),
                 },
                 constraints: table =>
                 {
