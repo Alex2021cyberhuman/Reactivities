@@ -16,7 +16,7 @@
 
             private Command(Guid id) => Id = id;
 
-            public static Command CreateInstance(Guid id) => new Command(id);
+            public static Command Get(Guid id) => new(id);
         }
         
         public class CommandHandler : IRequestHandler<Command>

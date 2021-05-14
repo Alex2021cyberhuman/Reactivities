@@ -7,23 +7,21 @@ namespace Reactivities.Api.Controllers
     using Domain;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using Persistence;
 
     public class ActivitiesController : ApiController
     {
-        [HttpGet(Name = nameof(GetActivitiesList))]
+        [HttpGet(Name = nameof(GetActivityList))]
         [ProducesResponseType(typeof(Activity), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetActivitiesList() => Ok(await Mediator.Send(List.Request.Empty));
+        public async Task<IActionResult> GetActivityList() => Ok(await Mediator.Send(List.Request.Empty));
 
         [HttpGet("{id:guid}", Name = nameof(GetActivityDetails))]
         [ProducesResponseType(typeof(Activity), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetActivityDetails(Guid id) => Ok(await Mediator.Send(Details.Request.Get(id)));
         
-        [HttpPut("{id:guid}", Name = nameof(EditActivities))]
+        [HttpPut("{id:guid}", Name = nameof(EditActivity))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> EditActivities([FromBody] Activity activity, [FromRoute] Guid id)
+        public async Task<IActionResult> EditActivity([FromBody] Activity activity, [FromRoute] Guid id)
         {
             await Mediator.Send(Edit.Command.Get(id, activity));
             return Ok();
@@ -35,6 +33,14 @@ namespace Reactivities.Api.Controllers
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
             await Mediator.Send(Create.Command.Get(activity));
+            return Ok();
+        }
+        
+        [HttpDelete("{id:guid}", Name = nameof(DeleteActivity))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteActivity([FromRoute] Guid id)
+        {
+            await Mediator.Send(Delete.Command.Get(id));
             return Ok();
         }
     }

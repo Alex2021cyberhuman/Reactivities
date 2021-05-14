@@ -19,7 +19,7 @@ const ActivityDetails = ({activity, onEdit, onCancel}: Props) => {
                 <Card.Description>
                     {activity.description}
                 </Card.Description>
-                <a>
+                <a href='#'>
                     <Icon name='address card' />
                     {activity.city}, {activity.venue}
                 </a>

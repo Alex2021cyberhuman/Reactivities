@@ -21,9 +21,8 @@ const Navbar = ({onCreate} : Props) => {
                 </Menu.Item>
                 <Menu.Item
                     name='create_new'
-                    onClick={onCreate}
                 >
-                    <Button positive>
+                    <Button as='a' type='button' onClick={onCreate}>
                         Create Activity
                     </Button>
                 </Menu.Item>    

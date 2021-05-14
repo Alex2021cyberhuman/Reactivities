@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import {Grid, List} from "semantic-ui-react";
 import Activity from "../../../models/Activity";
 import ActivityList from "./ActivityList";
@@ -11,11 +11,12 @@ interface Props {
     onEdit: (item:Activity) => void;
     onSelect: (item:Activity) => void;
     onCancel: (item:Activity) => void;    
+    onSubmit: (item:Activity) => void;    
     editMode: boolean;
 }
 
 
-const ActivityDashboard = ({activities, selectedActivity, onSelect, onEdit, editMode, onCancel}:Props) => {
+const ActivityDashboard = ({activities, selectedActivity, onSelect, onEdit, editMode, onCancel, onSubmit}:Props) => {
     return (
         <Grid>
             <Grid.Column width="10">
@@ -25,7 +26,7 @@ const ActivityDashboard = ({activities, selectedActivity, onSelect, onEdit, edit
             </Grid.Column>
             <Grid.Column width='6'>
                 {!editMode && selectedActivity && <ActivityDetails activity={selectedActivity} onEdit={onEdit} onCancel={onCancel}/>}
-                {editMode && selectedActivity && <ActivityForm activity={selectedActivity} onCancel={onCancel}/>}
+                {editMode && selectedActivity && <ActivityForm activity={selectedActivity} onCancel={onCancel} onSubmit={onSubmit}/>}
             </Grid.Column>
         </Grid>
     )
