@@ -1,5 +1,6 @@
 import {Button, Card, Icon, Image} from "semantic-ui-react";
 import Activity from "../../../models/Activity";
+import '../../../models/DateExtensions';
 
 interface Props {
     activity: Activity;
@@ -14,15 +15,15 @@ const ActivityDetails = ({activity, onEdit, onCancel}: Props) => {
             <Card.Content>
                 <Card.Header>{activity.title}</Card.Header>
                 <Card.Meta>
-                    <span className='date'>{activity.date}</span>
+                    <span className='date'>{activity.date.toISODateString()}</span>
                 </Card.Meta>
                 <Card.Description>
                     {activity.description}
                 </Card.Description>
-                <a href='#'>
+                <span className='address'>
                     <Icon name='address card' />
                     {activity.city}, {activity.venue}
-                </a>
+                </span>
             </Card.Content>
             <Card.Content extra>
                 <Button.Group widths='2'>

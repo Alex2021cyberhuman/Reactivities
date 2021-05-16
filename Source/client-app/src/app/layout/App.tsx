@@ -1,48 +1,66 @@
 import React, {useEffect, useState} from 'react';
-import Axios from 'axios';
 import {Container} from 'semantic-ui-react';
 import Activity, {empty} from "../../models/Activity";
 import Navbar from "../components/Navbar";
 import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
+import client from "../api/client";
+import Loading from "../components/Loading";
+import {Guid} from "guid-typescript";
 
-function App() {
+const App = () => {
     const [activities, setActivities] = useState<Array<Activity>>([]);
     const [editMode, setEditMode] = useState<boolean>(false);
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [deleting, setDeleting] = useState<boolean>(false);
+    const [submitting, setSubmitting] = useState<boolean>(false);
     
     useEffect(() => {
-        fetchActivities();
+        client.activities.getList()
+            .then(items => {
+                setActivities(items);
+            })
+            .catch(reason => console.error(reason))
+            .then(() => setLoading(false));            
     }, []);
 
-    function fetchActivities() {
-        Axios.get<Activity[]>('http://localhost:5000/api/activities')
-            .then(({data}) => {
-                setActivities(data);
-            });
-    }
-
-    const postActivity = (item: Activity) => {
-        Axios.post('http://localhost:5000/api/activities', item)
-            .then(() => console.log('success'))
-            .catch(error => console.error('error post', error));
+    const createActivity = (item: Activity) => {
+        item.id = Guid.raw();
+        setSubmitting(true);
+        client.activities.create(item)
+            .then(() => {
+                const newActivities = [ ...activities ];
+                newActivities.splice(newActivities.length, 0, item);
+                setActivities(newActivities);
+                setSelectedActivity(item);
+                setEditMode(false);
+            })
+            .catch(reason => console.error(reason))
+            .then(() => setSubmitting(false));            
     };
 
-    const putActivity = (item: Activity) => {
-        Axios.put(`http://localhost:5000/api/activities/${item.id}`, item)
-            .then(() => console.log('success'))
-            .catch(error => console.error('error put', error));
+    const editActivity = (item: Activity) => {
+        setSubmitting(true);
+        client.activities.edit(item)
+            .then(() => {
+                const newActivities = [ ...activities ];
+                newActivities[newActivities.findIndex(a => a.id === item.id)] = item;
+                setActivities(newActivities);
+                setSelectedActivity(item);
+                setEditMode(false);
+            })
+            .catch(reason => console.error(reason))
+            .then(() => setSubmitting(false));
     };
-    
-    const deleteActivity = (item: Activity) => {
-        Axios.delete(`http://localhost:5000/api/activities/${item.id}`)
-            .then(() => console.log('success'))
-            .catch(error => console.error('error delete', error));
-        
-    }
     
     const onStartCreating = () => {
         setEditMode(true);
         setSelectedActivity(empty());
+    };
+
+    const onStartEditing = (item: Activity) => {
+        setEditMode(true);
+        setSelectedActivity(item);
     };
     
     const onSelecting = (item: Activity) => {
@@ -50,45 +68,46 @@ function App() {
         setEditMode(false);
     };
     
-    const onStartEditing = (item: Activity) => {
-        setEditMode(true);
-        setSelectedActivity(item);
-    }
     
-    const onSubmit = (item: Activity) => {
-        const index = activities.findIndex(a => a.id === item.id);
-        const isCreate = index === -1;
-        
-        if (isCreate) {
-            postActivity(item);
-            const newActivities = [ ...activities ];
-            newActivities.splice(0, 0, item);
-            setActivities(newActivities);
+    const onSubmit = (item: Activity) => {        
+        if (!item.id) {
+            createActivity(item);
         } else {
-            putActivity(item);
-            const newActivities = [ ...activities ];
-            newActivities[newActivities.findIndex(a => a.id === item.id)] = item;
-            setActivities(newActivities);
+            editActivity(item);
         }
-        setSelectedActivity(item);
-        setEditMode(false);
-    }
+    };
     
     const onCancel = (item: Activity) => {
         setSelectedActivity(null);
         setEditMode(false);
-        deleteActivity(item);
-        const index = activities.findIndex(a => a.id === item.id);
-        const newActivities = [ ...activities ];
-        newActivities.splice(index, 1);
-        setActivities(newActivities);
     }
     
+    const onDelete = (item: Activity) => {
+        if (!item.id) return;
+        setDeleting(true);
+        client.activities.delete(item.id)
+            .then(() => {
+                setSelectedActivity(null);
+                setEditMode(false);
+                const newActivities = [ ...activities ];
+                newActivities.splice(activities.findIndex(a => a.id === item.id), 1);
+                setActivities(newActivities);
+            })
+            .catch(reason => console.error(reason))
+            .then(() => setDeleting(false));
+    };
+    
+    if (loading)
+        return (
+            <div className="container-background">
+                <Loading/>
+            </div>
+        );
     return (
         <div className="container-background">
             <Navbar onCreate={onStartCreating} />
             <Container style={{marginTop: "7em"}}>
-                <ActivityDashboard activities={activities} selectedActivity={selectedActivity} editMode={editMode} onEdit={onStartEditing} onSelect={onSelecting} onCancel={onCancel} onSubmit={onSubmit}/>                    
+                <ActivityDashboard submitting={submitting} deleting={deleting} activities={activities} selectedActivity={selectedActivity} editMode={editMode} onEdit={onStartEditing} onSelect={onSelecting} onDelete={onDelete} onCancel={onCancel} onSubmit={onSubmit}/>
             </Container>
         </div>
     );

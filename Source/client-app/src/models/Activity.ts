@@ -1,24 +1,21 @@
-﻿interface Activity {
+interface Activity {
     venue: string;
-    id: string;
+    id: string | null;
     title: string;
-    date: string;
+    date: Date;
     category: string;
     description: string;
     city: string;
 }
 
-export const empty = () => {
-    let activity: Activity = {
-        id: '',
-        title: '',
-        date: new Date().toJSON(),
-        category: '',
-        description: '',
-        city: '',
-        venue: ''
-    }
-    return activity;
-}
+export const empty = () => ({
+    id: null,
+    title: '',
+    date: new Date(),
+    category: '',
+    description: '',
+    city: '',
+    venue: ''
+} as Activity)
 
 export default Activity;

@@ -1,4 +1,4 @@
-﻿import {Button, Container, Image, Menu} from "semantic-ui-react";
+import {Button, Container, Image, Menu} from "semantic-ui-react";
 
 interface Props {
     onCreate: () => void

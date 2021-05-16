@@ -1,6 +1,7 @@
 namespace Reactivities.Api.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Application.Activities;
     using Base;
@@ -11,12 +12,11 @@ namespace Reactivities.Api.Controllers
     public class ActivitiesController : ApiController
     {
         [HttpGet(Name = nameof(GetActivityList))]
-        [ProducesResponseType(typeof(Activity), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<Activity>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetActivityList() => Ok(await Mediator.Send(List.Request.Empty));
 
         [HttpGet("{id:guid}", Name = nameof(GetActivityDetails))]
         [ProducesResponseType(typeof(Activity), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetActivityDetails(Guid id) => Ok(await Mediator.Send(Details.Request.Get(id)));
         
         [HttpPut("{id:guid}", Name = nameof(EditActivity))]
@@ -29,7 +29,6 @@ namespace Reactivities.Api.Controllers
 
         [HttpPost(Name = nameof(CreateActivity))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
             await Mediator.Send(Create.Command.Get(activity));
