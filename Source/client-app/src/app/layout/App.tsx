@@ -53,23 +53,23 @@ const App = () => {
             .then(() => setSubmitting(false));
     };
     
-    const onStartCreating = () => {
+    const handleCreating = () => {
         setEditMode(true);
         setSelectedActivity(empty());
     };
 
-    const onStartEditing = (item: Activity) => {
+    const handleEditing = (item: Activity) => {
         setEditMode(true);
         setSelectedActivity(item);
     };
     
-    const onSelecting = (item: Activity) => {
+    const handleSelecting = (item: Activity) => {
         setSelectedActivity(item);
         setEditMode(false);
     };
     
     
-    const onSubmit = (item: Activity) => {        
+    const handleSubmit = (item: Activity) => {        
         if (!item.id) {
             createActivity(item);
         } else {
@@ -77,12 +77,12 @@ const App = () => {
         }
     };
     
-    const onCancel = (item: Activity) => {
+    const handleSelectCancellation = (item: Activity) => {
         setSelectedActivity(null);
         setEditMode(false);
     }
     
-    const onDelete = (item: Activity) => {
+    const handleDelete = (item: Activity) => {
         if (!item.id) return;
         setDeleting(true);
         client.activities.delete(item.id)
@@ -105,9 +105,9 @@ const App = () => {
         );
     return (
         <div className="container-background">
-            <Navbar onCreate={onStartCreating} />
+            <Navbar onCreate={handleCreating} />
             <Container style={{marginTop: "7em"}}>
-                <ActivityDashboard submitting={submitting} deleting={deleting} activities={activities} selectedActivity={selectedActivity} editMode={editMode} onEdit={onStartEditing} onSelect={onSelecting} onDelete={onDelete} onCancel={onCancel} onSubmit={onSubmit}/>
+                <ActivityDashboard submitting={submitting} deleting={deleting} activities={activities} selectedActivity={selectedActivity} editMode={editMode} onEdit={handleEditing} onSelect={handleSelecting} onDelete={handleDelete} onCancel={handleSelectCancellation} onSubmit={handleSubmit}/>
             </Container>
         </div>
     );
