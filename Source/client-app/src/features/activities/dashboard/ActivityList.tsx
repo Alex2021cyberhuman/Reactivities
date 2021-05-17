@@ -3,7 +3,7 @@ import {Button, Item, Label, Segment} from "semantic-ui-react";
 import '../../../models/DateExtensions';
 import {useState} from "react";
 interface Props {
-    activities: Activity[];
+    activities: Map<string, Activity>;
     onEdit: (item:Activity) => void;
     onSelect: (item:Activity) => void;
     onDelete: (item:Activity) => void;
@@ -21,8 +21,8 @@ const ActivityList = ({activities, onSelect, onEdit, onDelete, deleting, submitt
     return (
         <Segment>
             <Item.Group divided>
-                {activities.map(activity => (
-                    <Item key={activity.id}>
+                {Array.from(activities).map(([key, activity]) => (
+                    <Item key={key}>
                         <Item.Content>
                             <Item.Header as='a'>
                                 {activity.title}
@@ -37,7 +37,7 @@ const ActivityList = ({activities, onSelect, onEdit, onDelete, deleting, submitt
                             <Item.Extra>
                                 <Button floated='right' content='View' primary onClick={() => onSelect(activity)}/>
                                 <Button floated='right' content='Edit' disabled={deleting || submitting} onClick={() => onEdit(activity)}/>
-                                <Button loading={deleting && deletingId === activity.id} disabled={deleting || submitting} floated='right' content='Delete' color='red' onClick={() => handleDelete(activity)}/>
+                                <Button loading={deleting && deletingId === key} disabled={deleting || submitting} floated='right' content='Delete' color='red' onClick={() => handleDelete(activity)}/>
                                 <Label content={activity.category}/>
                             </Item.Extra>
                         </Item.Content>

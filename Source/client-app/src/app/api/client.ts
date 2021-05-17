@@ -17,8 +17,17 @@ const mapStringToDate = (item: Activity) => {
     return item;
 }
 
+const getActivityMap = (items: Activity[]) => {
+    return new Map(items.map(item => [item.id, item]))
+}
+
 const activities = { 
-    getList: () => requests.get<Array<Activity>>('Activities').then(items => items.map(mapStringToDate)),
+    getMap: () =>{
+        return requests
+            .get<Array<Activity>>('Activities')
+            .then(items => items.map(mapStringToDate))
+            .then(getActivityMap);
+    },
     getDetails: (id: string) => requests.get<Activity>(`Activities/${id}`).then(mapStringToDate),
     delete: (id: string) => requests.delete<null>(`Activities/${id}`),
     create: (item: Activity) => requests.post<null,Activity>('Activities', item),

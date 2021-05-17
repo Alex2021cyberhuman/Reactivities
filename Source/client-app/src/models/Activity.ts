@@ -1,6 +1,8 @@
+import {Guid} from "guid-typescript";
+
 interface Activity {
     venue: string;
-    id: string | null;
+    id: string;
     title: string;
     date: Date;
     category: string;
@@ -9,7 +11,7 @@ interface Activity {
 }
 
 export const empty = () => ({
-    id: null,
+    id: Guid.raw(),
     title: '',
     date: new Date(),
     category: '',

@@ -1,10 +1,9 @@
 import {Button, Container, Image, Menu} from "semantic-ui-react";
+import {useActivityStore} from "../store/ActivityStore";
 
-interface Props {
-    onCreate: () => void
-}
-
-const Navbar = ({onCreate} : Props) => {
+const Navbar = () => {
+    const store = useActivityStore();
+    const onCreate = store.handleCreating;
     return (
         <Menu stackable className='navbar-gradient' inverted fixed="top">
             <Container>
