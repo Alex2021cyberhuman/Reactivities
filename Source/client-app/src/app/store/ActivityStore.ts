@@ -122,6 +122,14 @@ export default class ActivitiesStore {
         await client.activities.delete(item.id);
         this.activities.delete(item.id);
     };
+
+    async findActivity(id: string) {
+        const local = this.activities.get(id);
+        if (!local) {
+            return await client.activities.getDetails(id);
+        }
+        return local;
+    }
 }
 
 export const ActivityStoreContext = createContext<ActivitiesStore>(new ActivitiesStore());

@@ -25,8 +25,7 @@ const ActivityDashboard = observer(() => {
                 </List>
             </Grid.Column>
             <Grid.Column width='6'>
-                {!store.editMode && store.current && <ActivityDetails activity={store.current} onEdit={store.handleEditing} onCancel={store.handleCancelSelection}/>}
-                {store.editMode && store.current && <ActivityForm activity={store.current} onCancel={store.handleCancelSelection} onSubmit={store.handleSubmit} submitting={store.submitting}/>}
+                <h1>There will be filters</h1>
             </Grid.Column>
         </Grid>
     )

@@ -1,5 +1,6 @@
 import {Button, Container, Image, Menu} from "semantic-ui-react";
 import {useActivityStore} from "../store/ActivityStore";
+import {NavLink} from "react-router-dom";
 
 const Navbar = () => {
     const store = useActivityStore();
@@ -10,11 +11,15 @@ const Navbar = () => {
                 <Menu.Item
                     name='icon'
                     header
+                    as={NavLink}
+                    to='home'
                 >
                     <Image src="/logo.png" alt="logo" size="mini"/>
                 </Menu.Item>
                 <Menu.Item
                     name='title'
+                    as={NavLink}
+                    to='activities'
                 >
                     Reactivities
                 </Menu.Item>
