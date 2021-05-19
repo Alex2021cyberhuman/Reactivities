@@ -1,48 +1,69 @@
 import {Button, Form, Segment} from "semantic-ui-react";
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import Activity, {empty} from "../../../models/Activity";
 import '../../../models/DateExtensions';
+import {observer} from "mobx-react-lite";
+import {useActivityStore} from "../../../app/store/ActivityStore";
+import {useHistory, useParams} from "react-router-dom";
 
 interface Props {
-    activity: Activity;
-    onCancel: (item:Activity) => void;
-    onSubmit: (item:Activity) => void;
-    submitting: boolean;
+    create?: boolean;
 }
 
-const ActivityForm = ({activity, onCancel, onSubmit: onSave, submitting}:Props) => {
-    const initialState = activity ?? empty();
+const ActivityForm = observer (({create = true}:Props) => {
+    const history = useHistory<any>();
+    const {id} = useParams<{id: string | undefined}>();
+    const [activity, setActivity] = useState<Activity>(empty());
+    const [submitting, setSubmitting] = useState<boolean>(false);
+    const store = useActivityStore();
     
-    const [formActivity, setFormActivity] = useState<Activity>(initialState);
+    useEffect(() => {
+        if (!create && id)
+            store.findActivity(id)
+                .then(a => setActivity(a));
+    }, [id, create, store]);
     
     const handleSubmit = () => {
-        onSave(formActivity);
+        setSubmitting(true);        
+        const promise = !create ? store.edit(activity) : store.create(activity);
+        promise
+            .then(() => history.push(`/activities/details/${activity.id}`))
+            .finally(() => setSubmitting(false));
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement  | HTMLTextAreaElement>) => {
-        const {name, value} = event.target;
-        setFormActivity({...formActivity, [name]: value});
+        setActivity({...activity, [event.target.name]: event.target.value})
     };
 
     const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = event.target;
-        setFormActivity({...formActivity, [name]: new Date(value)});
+        setActivity({...activity, [event.target.name]: new Date(event.target.value)});
+    }
+    
+    const handleCancel = () => {
+        if (create) {
+            history.replace('/activities');
+        } else {
+            history.goBack();
+        }        
     }
     
     return (
         <Segment clearing>
             <Form autoComplete='off' onSubmit={handleSubmit}>
-                <Form.Input placeholdar='Title' value={formActivity.title} name='title' onChange={handleChange}/>
-                <Form.TextArea placeholdar='Description' value={formActivity.description} name='description' onChange={handleChange}/>
-                <Form.Input placeholdar='Category' value={formActivity.category} name='category' onChange={handleChange}/>
-                <Form.Input type='date' placeholdar='Date' value={formActivity.date.toISODateString()} name='date' onChange={handleDateChange}/>
-                <Form.Input placeholdar='City' value={formActivity.city} name='city' onChange={handleChange}/>
-                <Form.Input placeholdar='Venue' value={formActivity.venue} name='venue' onChange={handleChange}/>
-                <Button loading={submitting} floated='right' positive type='submit' content='Submit'/>
-                <Button floated='right' negative type='button' content='Cancel' onClick={() => {onCancel(activity)}}/>
+                <Form.Input placeholdar='Title' value={activity.title} name='title' onChange={handleChange}/>
+                <Form.TextArea placeholdar='Description' value={activity.description} name='description' onChange={handleChange}/>
+                <Form.Input placeholdar='Category' value={activity.category} name='category' onChange={handleChange}/>
+                <Form.Input type='date' placeholdar='Date' value={activity.date.toISODateString()} name='date' onChange={handleDateChange}/>
+                <Form.Input placeholdar='City' value={activity.city} name='city' onChange={handleChange}/>
+                <Form.Input placeholdar='Venue' value={activity.venue} name='venue' onChange={handleChange}/>
+
+                <Button.Group widths='2'>
+                    <Button loading={submitting} floated='right' positive type='submit' content='Submit'/>
+                    <Button floated='right' secondary color='grey'  type='button' content='Cancel' onClick={handleCancel} />
+                </Button.Group>
             </Form>
         </Segment>
     )
-}
+});
 
 export default ActivityForm;

@@ -1,4 +1,4 @@
-import Activity, {empty} from "../../models/Activity";
+import Activity from "../../models/Activity";
 import {makeAutoObservable} from "mobx";
 import client from "../api/client";
 import {createContext, useContext} from "react";
@@ -6,25 +6,23 @@ import {createContext, useContext} from "react";
 export default class ActivitiesStore {    
     private _activities: Map<string, Activity> = new Map<string, Activity>();
     private _initialLoading: boolean = true;
-    private _isCreating: boolean | undefined = undefined;
-    private _editMode: boolean = false;
-    private _submitting: boolean = false;    
-    private _current: Activity | undefined = undefined;
     private _deleting: boolean = false;
-
-    get current(): Activity | undefined {
-        return this._current;
+    
+    get activitiesSortedByDate() {
+        return Array.from(this.activities)
+            .map(([key, value]) => value)
+            .sort((a, b) => +a.date - +b.date);
     }
-
-    set current(value: Activity | undefined) {
-        this._current = value;
-    }
-    get editMode(): boolean {
-        return this._editMode;
-    }
-
-    set editMode(value: boolean) {
-        this._editMode = value;
+    
+    get groupedActivitiesByDate() {
+        const result = this.activitiesSortedByDate.reduce((previous, currentItem) => {
+            const date = currentItem.date.toISODateString();
+            if (!previous[date])
+                previous[date] = [];
+            previous[date].push(currentItem);
+            return previous;
+        }, Object.create(null) as Record<string, Activity[]>);
+        return result;
     }
     
     get initialLoading() {
@@ -41,14 +39,6 @@ export default class ActivitiesStore {
 
     set activities(value: Map<string, Activity>) {
         this._activities = value;
-    }
-    
-    set submitting(value: boolean) {
-        this._submitting = value;
-    }
-
-    get submitting(): boolean {
-        return this._submitting;
     }
 
     get deleting(): boolean {
@@ -67,69 +57,33 @@ export default class ActivitiesStore {
         client.activities.getMap().then(map => {
             this.activities = map;
             this.initialLoading = false
-        });        
-    }
-
-    handleCreating = () => {
-        this.editMode = true;
-        this._isCreating = true;
-        this._current = empty();
-    }
-    
-    handleSubmit = async (item: Activity) => {
-        this.submitting = true;
-        this._createOrEdit(item).catch(reason => console.error(reason)).then(() => {
-            this.submitting = false;
-            this.editMode = false;
-            this.current = item;
         });
+        return client;
     }
 
-    handleDeleting = (item: Activity) => {
-        this._delete(item).catch(reason => console.error(reason)).then(() => {
-            this.deleting = false;
-        });
-    };
-
-    handleSelection = (item: Activity) => {
-        this.current = this.activities.get(item.id);
-        this.editMode = false;
-    };
+    create = async (item: Activity) => {
+        await client.activities.create(item);
+        this.activities.set(item.id, item);
+    }
     
-    handleCancelSelection = (item: Activity) => {        
-        this.current = undefined;
-        this.editMode = false;
-    };
-
-    handleEditing = (item: Activity) => {
-        this.editMode = true;
-        this.current = this.activities.get(item.id);
-        this._isCreating = false;
-    };
-    
-    private _createOrEdit = async (item: Activity) => {
-        if (this._isCreating) {
-            await client.activities.create(item);
-        } else {
-            await client.activities.edit(item);
-        }
-        this.activities.set(item.id, item);        
+    edit = async (item: Activity) => {
+        await client.activities.edit(item);
+        this.activities.set(item.id, item);
     }
 
-    private _delete = async (item: Activity) => {
+    delete = async (id: string) => {
         this.deleting = true;
-        this.current = undefined;
-        await client.activities.delete(item.id);
-        this.activities.delete(item.id);
+        await client.activities.delete(id);
+        this.activities.delete(id);
     };
 
-    async findActivity(id: string) {
+    findActivity = async (id: string) => {
         const local = this.activities.get(id);
         if (!local) {
             return await client.activities.getDetails(id);
         }
         return local;
-    }
+    };
 }
 
 export const ActivityStoreContext = createContext<ActivitiesStore>(new ActivitiesStore());

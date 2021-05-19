@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import App from "./app/layout/App";
 import ActivitiesStore, {ActivityStoreContext} from "./app/store/ActivityStore";
+import './models/DateExtensions';
 
 ReactDOM.render(    
   <React.StrictMode>
