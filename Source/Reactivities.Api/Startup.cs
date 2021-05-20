@@ -1,6 +1,8 @@
 namespace Reactivities.Api
 {
     using System.Reflection;
+    using Application.Core.Validators;
+    using FluentValidation.AspNetCore;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -20,6 +22,10 @@ namespace Reactivities.Api
 
         public void ConfigureServices(IServiceCollection services) =>
             services.AddControllers()
+                .AddFluentValidation(options =>
+                {
+                    options.RegisterValidatorsFromAssemblyContaining<ActivityValidator>();
+                })
                 .Services.AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1",

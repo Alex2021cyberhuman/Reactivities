@@ -17,30 +17,27 @@ namespace Reactivities.Api.Controllers
 
         [HttpGet("{id:guid}", Name = nameof(GetActivityDetails))]
         [ProducesResponseType(typeof(Activity), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetActivityDetails(Guid id) => Ok(await Mediator.Send(Details.Request.Get(id)));
+        public async Task<IActionResult> GetActivityDetails(Guid id) => HandleExecutionResult(await Mediator.Send(Details.Request.Get(id)));
         
         [HttpPut("{id:guid}", Name = nameof(EditActivity))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> EditActivity([FromBody] Activity activity, [FromRoute] Guid id)
         {
-            await Mediator.Send(Edit.Command.Get(id, activity));
-            return Ok();
+            return HandleExecutionResult(await Mediator.Send(Edit.Command.Get(id, activity)));
         }
 
         [HttpPost(Name = nameof(CreateActivity))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
-            await Mediator.Send(Create.Command.Get(activity));
-            return Ok();
+            return HandleExecutionResult(await Mediator.Send(Create.Command.Get(activity)));
         }
         
         [HttpDelete("{id:guid}", Name = nameof(DeleteActivity))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteActivity([FromRoute] Guid id)
         {
-            await Mediator.Send(Delete.Command.Get(id));
-            return Ok();
+            return HandleExecutionResult(await Mediator.Send(Delete.Command.Get(id)));
         }
     }
 }

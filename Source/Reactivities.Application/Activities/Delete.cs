@@ -1,16 +1,16 @@
 ﻿namespace Reactivities.Application.Activities
 {
     using System;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Core;
     using MediatR;
     using Microsoft.EntityFrameworkCore;
     using Persistence;
 
     public class Delete
     {
-        public class Command : IRequest
+        public class Command : IRequest<ExecutionResult<Unit>>
         {
             public Guid Id { get; }
 
@@ -19,7 +19,7 @@
             public static Command Get(Guid id) => new(id);
         }
         
-        public class CommandHandler : IRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command, ExecutionResult<Unit>>
         {
             private readonly DataContext _context;
 
@@ -28,13 +28,15 @@
                 _context = context;
             }        
             
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ExecutionResult<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activityToDelete = await 
-                    _context.Activities.FirstOrDefaultAsync(activity => activity.Id == request.Id, cancellationToken);
+                    _context.Activities.FirstOrDefaultAsync(a => a.Id == request.Id, cancellationToken);
+                if (activityToDelete is null)
+                    return ExecutionResult.Missing<Unit>();
                 _context.Activities.Remove(activityToDelete);
                 await _context.SaveChangesAsync(cancellationToken);
-                return Unit.Value;
+                return ExecutionResult.SuccessUnit();
             }
         }
     }
