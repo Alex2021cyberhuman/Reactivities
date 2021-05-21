@@ -1,9 +1,27 @@
-import Axios, {AxiosResponse} from "axios";
+import Axios, {AxiosError, AxiosResponse} from "axios";
 import Activity from "../../models/Activity";
+import {history} from "../../index";
+import {toast} from "react-toastify";
 
-Axios.defaults.baseURL = "http://localhost:5000/api/";
+Axios.defaults.baseURL = 'http://localhost:5000/api/';
 
 const getRequestBody = <Type>(response : AxiosResponse<Type> ): Type => response.data;
+
+Axios.interceptors.response.use(undefined, (error) => {
+    const {response: {status}} = error;
+    switch (status) {
+        case 404:
+            history.push('/notFound');
+            break;
+        case 500: 
+            toast.error('Internal server error');
+            break;
+        case 400:
+            toast.warn('Validation error');
+            break;
+    }
+    return  Promise.reject(error);
+})
 
 const requests = {
     get: <ReturnType>(uri: string) => Axios.get<ReturnType>(uri).then(getRequestBody),
