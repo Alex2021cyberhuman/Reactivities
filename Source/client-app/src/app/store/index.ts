@@ -1,14 +1,19 @@
 import ActivitiesStore from "./ActivityStore";
 import {createContext, useContext} from "react";
+import {makeAutoObservable} from "mobx";
 
-interface Store {
-    activities: ActivitiesStore;
+export default class Store {
+    get activities(): ActivitiesStore {
+        return this._activities;
+    }
+
+    private _activities: ActivitiesStore = new ActivitiesStore();
+
+    constructor() {
+        makeAutoObservable(this);
+    }
 }
 
-const store: Store = {
-    activities: new ActivitiesStore()
-}
-
-export const StoreContext = createContext<Store>(store);
+export const StoreContext = createContext<Store>(new Store());
 
 export const useStore = () => useContext(StoreContext);

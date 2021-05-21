@@ -3,8 +3,8 @@ import {ChangeEvent, useEffect, useState} from "react";
 import Activity, {empty} from "../../../models/Activity";
 import '../../../models/DateExtensions';
 import {observer} from "mobx-react-lite";
-import {useActivityStore} from "../../../app/store/ActivityStore";
 import {useHistory, useParams} from "react-router-dom";
+import {useStore} from "../../../app/store";
 
 interface Props {
     create?: boolean;
@@ -15,17 +15,17 @@ const ActivityForm = observer (({create = true}:Props) => {
     const {id} = useParams<{id: string | undefined}>();
     const [activity, setActivity] = useState<Activity>(empty());
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const store = useActivityStore();
+    const {activities} = useStore();
     
     useEffect(() => {
         if (!create && id)
-            store.findActivity(id)
+            activities.findActivity(id)
                 .then(a => setActivity(a));
-    }, [id, create, store]);
+    }, [id, create, activities]);
     
     const handleSubmit = () => {
         setSubmitting(true);        
-        const promise = !create ? store.edit(activity) : store.create(activity);
+        const promise = !create ? activities.edit(activity) : activities.create(activity);
         promise
             .then(() => history.push(`/activities/details/${activity.id}`))
             .finally(() => setSubmitting(false));

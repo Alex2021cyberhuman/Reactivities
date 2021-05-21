@@ -1,7 +1,6 @@
 import Activity from "../../models/Activity";
 import {makeAutoObservable} from "mobx";
 import client from "../api/client";
-import {createContext, useContext} from "react";
 
 export default class ActivitiesStore {    
     private _activities: Map<string, Activity> = new Map<string, Activity>();
@@ -15,14 +14,13 @@ export default class ActivitiesStore {
     }
     
     get groupedActivitiesByDate() {
-        const result = this.activitiesSortedByDate.reduce((previous, currentItem) => {
+        return this.activitiesSortedByDate.reduce((previous, currentItem) => {
             const date = currentItem.date.toISODateString();
             if (!previous[date])
                 previous[date] = [];
             previous[date].push(currentItem);
             return previous;
         }, Object.create(null) as Record<string, Activity[]>);
-        return result;
     }
     
     get initialLoading() {
@@ -85,7 +83,3 @@ export default class ActivitiesStore {
         return local;
     };
 }
-
-export const ActivityStoreContext = createContext<ActivitiesStore>(new ActivitiesStore());
-
-export const useActivityStore = () => useContext(ActivityStoreContext); 
