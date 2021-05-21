@@ -10,43 +10,30 @@ import ActivityForm from "../../features/activities/form/ActivityForm";
 const App = () => {
     return (
         <BrowserRouter>
-            <Route exact path={['/', '/home']}>
-                <HomePage/>
-            </Route>
             <Switch>
-                <Route exact path='/activities/details/:id'>
-                    <>
-                        <Navbar/>
-                        <Container style={{marginTop: "7em"}}>
-                            <ActivityDetailsPage/>
-                        </Container>
-                    </>
+                <Route exact path={['/', '/home']} strict>
+                    <HomePage/>
                 </Route>
-                <Route exact path='/activities/edit/:id'>
-                    <>
-                        <Navbar/>
-                        <Container style={{marginTop: "7em"}}>
-                            <ActivityForm create={false}/>
-                        </Container>
-                    </>
+                <Route path={['/**']}>
+                    <Navbar/>
+                    <Container style={{marginTop: '7em'}}>
+                        <Switch>
+                            <Route path='/activities/details/:id'>
+                                <ActivityDetailsPage/>
+                            </Route>
+                            <Route path='/activities/edit/:id'>
+                                <ActivityForm create={false}/>
+                            </Route>
+                            <Route path='/activities/create'>
+                                <ActivityForm/>
+                            </Route>
+                            <Route path='/activities'>
+                                <ActivityDashboardPage/>
+                            </Route>
+                        </Switch>
+                    </Container>
                 </Route>
-                <Route exact path='/activities/create'>
-                    <>
-                        <Navbar/>
-                        <Container style={{marginTop: "7em"}}>
-                            <ActivityForm/>
-                        </Container>
-                    </>
-                </Route>
-                <Route exact path='/activities'>
-                    <>
-                        <Navbar/>
-                        <Container style={{marginTop: "7em"}}>
-                            <ActivityDashboardPage/>
-                        </Container>
-                    </>
-                </Route>
-            </Switch>
+            </Switch>            
         </BrowserRouter>
     );
 }
