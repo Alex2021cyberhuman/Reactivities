@@ -1,15 +1,16 @@
-import Axios, {AxiosError, AxiosResponse} from "axios";
+import Axios, {AxiosResponse} from "axios";
 import Activity from "../../models/Activity";
 import {history} from "../../index";
 import {toast} from "react-toastify";
+import {getNewValidationError} from "../../features/errors/ValidationErrors";
 
 Axios.defaults.baseURL = 'http://localhost:5000/api/';
 
 const getRequestBody = <Type>(response : AxiosResponse<Type> ): Type => response.data;
 
-Axios.interceptors.response.use(undefined, (error) => {
-    const {response: {status}} = error;
-    switch (status) {
+Axios.interceptors.response.use(value => value, (error) => {
+    const {response} = error;
+    switch (response.status) {
         case 404:
             history.push('/notFound');
             break;
@@ -17,7 +18,8 @@ Axios.interceptors.response.use(undefined, (error) => {
             toast.error('Internal server error');
             break;
         case 400:
-            toast.warn('Validation error');
+            toast(getNewValidationError(Object.entries(response.data.errors).map(([key, problems]) => ({key, problems}))));
+            console.log(error.response);
             break;
     }
     return  Promise.reject(error);

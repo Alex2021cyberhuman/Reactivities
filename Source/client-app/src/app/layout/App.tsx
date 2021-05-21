@@ -15,7 +15,7 @@ const App = () => {
         if (!activities){
             loadActivities();
         }            
-    }, [activities])
+    }, [activities, loadActivities])
     
     return (
         <Switch>

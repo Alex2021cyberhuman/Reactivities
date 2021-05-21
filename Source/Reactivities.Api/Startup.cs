@@ -25,6 +25,7 @@ namespace Reactivities.Api
                 .AddFluentValidation(options =>
                 {
                     options.RegisterValidatorsFromAssemblyContaining<ActivityValidator>();
+                    options.LocalizationEnabled = false;
                 })
                 .Services.AddSwaggerGen(c =>
                 {
