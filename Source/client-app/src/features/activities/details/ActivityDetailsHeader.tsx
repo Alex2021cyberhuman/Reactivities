@@ -26,7 +26,7 @@ const ActivityDetailsHeader = observer (({activity}: Props) => {
     return (
         <Segment.Group>
             <Segment basic attached='top' style={{padding: '0', position: 'relative'}}>
-                <Image src={`${process.env.PUBLIC_URL}/categoryImages/${activity.category}.jpg`} fluid
+                <Image src={`${process.env.PUBLIC_URL}/categoryImages/${activity.category.toLowerCase()}.jpg`} fluid
                        style={activityImageStyle} alt='Activity category logo'/>
                 <Segment style={activityImageTextStyle} basic>
                     <Item.Group>

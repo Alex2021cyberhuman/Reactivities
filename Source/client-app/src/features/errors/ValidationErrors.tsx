@@ -1,4 +1,4 @@
-﻿import {Message} from "semantic-ui-react";
+import {Message} from "semantic-ui-react";
 
 interface Error {
     key: string,
