@@ -20,4 +20,5 @@ export const empty = () => ({
     venue: ''
 } as Activity)
 
+
 export default Activity;

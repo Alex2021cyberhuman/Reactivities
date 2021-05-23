@@ -9,4 +9,6 @@ export const categories = ({
     TRAVEL: 'Travel',
 })
 
-export const getCategoryOptions = () => Object.entries(categories).map(([key, value]) => ({text: value, value} as Option));
+export const getCategoryList = () => Object.entries(categories).map(([, value]) => value);
+
+export const getCategoryOptions = () => getCategoryList().map(value => ({text: value, value} as Option));

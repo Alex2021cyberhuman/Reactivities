@@ -2,13 +2,15 @@ import {useField} from "formik";
 import React from "react";
 import Calendar from "react-calendar";
 import {Form, Label, Message} from "semantic-ui-react";
+import DatePicker from 'react-datepicker';
 
 interface Props {
     label: string;
-    name: string;    
+    name: string;
+    min?: Date;
 }
 
-const CustomFormCalendar = (props: Props) => {
+const CustomDatePicker = (props: Props) => {
     const [field, meta, helpers] = useField<Date>(props.name);
 
     function handleChange(date: Date | Date[]) {
@@ -20,7 +22,7 @@ const CustomFormCalendar = (props: Props) => {
             <Label content={props.label}  />
             <Calendar {...field} {...props} onChange={handleChange}/>
             {
-                meta.touched && meta.error &&
+                !meta.touched && meta.error &&
                 <Message error>
                     {meta.error}
                 </Message>
@@ -29,4 +31,4 @@ const CustomFormCalendar = (props: Props) => {
     )
 };
 
-export default CustomFormCalendar;
+export default CustomDatePicker;

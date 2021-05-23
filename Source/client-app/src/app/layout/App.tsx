@@ -24,7 +24,7 @@ const App = () => {
             </Route>
             <Route path={['/**']}>
                 <Navbar/>
-                <Container style={{marginTop: '7em'}}>
+                <Container>
                     <Switch>
                         <Route path='/activities/details/:id'>
                             <ActivityDetailsPage/>

@@ -1,21 +1,21 @@
 import {useField} from "formik";
-import {Form, Input, Label, Message} from "semantic-ui-react";
+import {Form, Label, Message, TextArea} from "semantic-ui-react";
 
 interface Props {
     label: string;
     name: string;
 }
 
-const CustomTextInput = (props: Props) => {
+const CustomTextArea = (props: Props) => {
     const [field, meta] = useField<string>(props.name);
     return (
         <>
             <Form.Field>
                 <Label content={props.label}/>
-                <Input {...field} {...props} label={undefined}/>
+                <TextArea {...field} {...props} label={undefined}/>
             </Form.Field>
             {
-                meta.touched && meta.error &&
+                !meta.touched && meta.error &&
                 <Message error>
                     {meta.error}
                 </Message>
@@ -24,4 +24,4 @@ const CustomTextInput = (props: Props) => {
     )
 }
 
-export default CustomTextInput;
+export default CustomTextArea;

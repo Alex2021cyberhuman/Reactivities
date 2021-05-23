@@ -24,9 +24,9 @@ const CustomSelect = (props: Props) => {
     return (
         <Form.Field>
             <Label content={props.label}/> 
-            <Select placeholder={props.label} {...field} {...props} onChange={handleChange} name={props.name} id={props.name}/>
+            <Select placeholder={props.label} {...field} {...props} onChange={handleChange}  name={props.name} id={props.name}/>
             {
-                meta.touched && meta.error &&
+                !meta.touched && meta.error &&
                 <Message error>
                     {meta.error}
                 </Message>

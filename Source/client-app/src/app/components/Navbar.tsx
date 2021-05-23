@@ -3,7 +3,7 @@ import {NavLink} from "react-router-dom";
 
 const Navbar = () => {
     return (
-        <Menu stackable className='navbar-gradient' inverted fixed="top">
+        <Menu stackable className='navbar-gradient' inverted >
             <Container>
                 <Menu.Item
                     name='icon'
