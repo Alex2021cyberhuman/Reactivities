@@ -20,7 +20,7 @@ const CustomFormCalendar = (props: Props) => {
             <Label content={props.label}  />
             <Calendar {...field} {...props} onChange={handleChange}/>
             {
-                meta.touched && meta.error &&
+                !meta.touched && meta.error &&
                 <Message error>
                     {meta.error}
                 </Message>
