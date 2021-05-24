@@ -1,9 +1,12 @@
 ﻿namespace Reactivities.Persistence
 {
+    using System;
     using Domain;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         protected DataContext()
         {
