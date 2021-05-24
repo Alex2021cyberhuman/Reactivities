@@ -1,4 +1,4 @@
-﻿namespace Reactivities.Api.Infrastructure
+﻿namespace Reactivities.Api.Extensions
 {
     using System;
     using Microsoft.EntityFrameworkCore;

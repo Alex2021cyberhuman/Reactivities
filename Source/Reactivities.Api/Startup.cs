@@ -1,14 +1,16 @@
 namespace Reactivities.Api
 {
+    using System;
     using System.Reflection;
     using Application.Core.Validators;
+    using Extensions;
     using FluentValidation.AspNetCore;
+    using Infrastructure.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Infrastructure;
     using MediatR;
 
     public class Startup
@@ -16,16 +18,22 @@ namespace Reactivities.Api
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
+            var options = new AccessTokenProviderOptions(null, null, null, TimeSpan.Zero);
+            _configuration.Bind(nameof(AccessTokenProviderOptions), options);
+            _accessTokenProviderOptions = options;
         }
 
         private readonly IConfiguration _configuration;
+        private readonly AccessTokenProviderOptions _accessTokenProviderOptions;
 
         public void ConfigureServices(IServiceCollection services) =>
-            services.AddControllers()
+            services
+                .AddControllers()
                 .AddFluentValidation(options =>
                 {
                     options.RegisterValidatorsFromAssemblyContaining<ActivityValidator>();
                     options.LocalizationEnabled = false;
+                    options.AutomaticValidationEnabled = false;
                 })
                 .Services.AddSwaggerGen(c =>
                 {
@@ -39,7 +47,8 @@ namespace Reactivities.Api
                 .AddDevelopmentPersistence()
                 .AddConfiguredCors(_configuration)
                 .AddMediatR(Assembly.Load("Reactivities.Application"))
-                .AddAutoMapper(expression => expression.AddMaps(Assembly.Load("Reactivities.Application")));
+                .AddAutoMapper(expression => expression.AddMaps(Assembly.Load("Reactivities.Application")))
+                .AddCustomAuthorization(_accessTokenProviderOptions, _configuration);
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -51,12 +60,12 @@ namespace Reactivities.Api
             }
 
             app.UseConfiguredCors();
-            
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseConfiguredAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

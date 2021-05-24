@@ -1,10 +1,9 @@
-﻿namespace Reactivities.Api.Infrastructure
+﻿namespace Reactivities.Api.Extensions
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    
-    
+
     public static class ConfiguredCorsExtensions
     {
         private const string PolicyName = "DefaultPolicy";
