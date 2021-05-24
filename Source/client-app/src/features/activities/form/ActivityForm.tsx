@@ -47,6 +47,7 @@ const ActivityForm = observer(({create = true}: Props) => {
         targetPromise
             .then(() => {
                 setActivity(values);
+                history.push(`/activities/details/${values.id}`)
             })
             .catch((reason) => {
                 console.log(reason);
@@ -65,14 +66,16 @@ const ActivityForm = observer(({create = true}: Props) => {
         category: Yup.string().oneOf(getCategoryList()).required().label('Category'),
         date: Yup.date().required().label('Date'),
     });
-    
+
     return (
         <Segment clearing>
             <Formik enableReinitialize initialValues={activity} onSubmit={handleSubmit}
                     validationSchema={validationSchema}>
                 {({
                       handleSubmit,
-                      isSubmitting
+                      isSubmitting,
+                      isValid,
+                      dirty
                   }) => (
                     <Form onSubmit={handleSubmit} error loading={isSubmitting} autoComplete='off'>
                         <CustomTextInput name='title' label='Title'/>
@@ -82,8 +85,8 @@ const ActivityForm = observer(({create = true}: Props) => {
                         <CustomDatePicker name='date' label='Date' min={new Date()}/>
                         <CustomTextArea label='Description' name='description'/>
                         <Button.Group widths='2'>
-                            <Button loading={isSubmitting} floated='right' positive type='submit' content='Submit'/>
-                            <Button floated='right' secondary color='grey' type='button' content='Cancel'
+                            <Button loading={isSubmitting} disabled={isSubmitting || !isValid} floated='right' positive type='submit' content='Submit'/>
+                            <Button disabled={isSubmitting} floated='right' secondary color='grey' type='button' content='Cancel'
                                     onClick={handleCancel}/>
                         </Button.Group>
                     </Form>
