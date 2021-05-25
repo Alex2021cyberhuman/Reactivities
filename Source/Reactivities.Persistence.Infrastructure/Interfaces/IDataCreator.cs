@@ -6,5 +6,6 @@
     public interface IDataCreator
     {
         public IReadOnlyCollection<Activity> Activities { get; }
+        public IReadOnlyCollection<User> Users { get; }
     }
 }

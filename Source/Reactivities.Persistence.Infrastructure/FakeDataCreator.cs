@@ -5,9 +5,17 @@
     using Bogus;
     using Domain;
     using Interfaces;
+    using Microsoft.AspNetCore.Identity;
 
     public class FakeDataCreator : IDataCreator
     {
+        private readonly IPasswordHasher<User> _passwordHasher;
+
+        public FakeDataCreator(IPasswordHasher<User> passwordHasher)
+        {
+            _passwordHasher = passwordHasher;
+        }
+        
         private readonly string[] _categories =
         {
             "Culture",
@@ -19,6 +27,8 @@
         };
         
         private List<Activity> _activities;
+        private List<User> _users;
+        private const string StandardPassword = "Pa$$w0rd";
 
         public IReadOnlyCollection<Activity> Activities => _activities ??= new Faker<Activity>()
             .Rules((faker, activity) =>
@@ -30,6 +40,20 @@
                 activity.Date = faker.Date.Future();
                 activity.Venue = faker.Address.SecondaryAddress();
             })
+            .GenerateForever()
+            .Take(25)
+            .ToList();
+        
+        public IReadOnlyCollection<User> Users => _users ??= new Faker<User>()
+            .Rules(((faker, user) =>
+            {
+                user.Email = faker.Internet.Email();
+                user.DisplayName = faker.Internet.UserName();
+                user.UserName = faker.Internet.UserName(user.DisplayName, user.Email);
+                user.ImageUrl = faker.Image.PicsumUrl();
+                user.PhoneNumber = faker.Phone.PhoneNumber();
+                user.PasswordHash = _passwordHasher.HashPassword(user, StandardPassword);
+            }))
             .GenerateForever()
             .Take(25)
             .ToList();

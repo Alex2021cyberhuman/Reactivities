@@ -1,6 +1,7 @@
 namespace Reactivities.Api.Extensions
 {
     using System;
+    using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using Domain;
     using Infrastructure.Authorization;
@@ -24,6 +25,7 @@ namespace Reactivities.Api.Extensions
             services.Configure<AccessTokenProviderOptions>(nameof(AccessTokenProviderOptions),
                     providerOptions => configuration.Bind(nameof(AccessTokenProviderOptions), providerOptions))
                 .AddIdentityCore<User>()
+                .AddSignInManager()
                 .AddEntityFrameworkStores<DataContext>()
                 .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<User>>()
                 .AddDefaultTokenProviders()
@@ -49,6 +51,8 @@ namespace Reactivities.Api.Extensions
                         builder.RequireClaim(ClaimTypes.Name);
                         builder.RequireAuthenticatedUser();
                     });
-                });
+                })
+                .AddSingleton<JwtSecurityTokenHandler>()
+                .AddScoped<IAccessTokenProvider, AccessTokenProvider>();
     }
 }

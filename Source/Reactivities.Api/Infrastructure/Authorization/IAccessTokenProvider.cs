@@ -2,9 +2,10 @@ namespace Reactivities.Api.Infrastructure.Authorization
 {
     using System.Threading.Tasks;
     using Domain;
+    using Models;
 
     public interface IAccessTokenProvider
     {
-        Task<string> GenerateToken(User user);
+        Task<AccessTokenResponse> GenerateTokenAsync(User user);
     }
 }

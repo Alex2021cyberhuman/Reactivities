@@ -22,6 +22,7 @@
             if (isCreated)
                 return;
             await _context.Activities.AddRangeAsync(_data.Activities);
+            await _context.Users.AddRangeAsync(_data.Users);
             await _context.SaveChangesAsync();
         }
 

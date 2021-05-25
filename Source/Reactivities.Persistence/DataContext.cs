@@ -17,5 +17,10 @@
         }
 
         public DbSet<Activity> Activities { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
     }
 }
