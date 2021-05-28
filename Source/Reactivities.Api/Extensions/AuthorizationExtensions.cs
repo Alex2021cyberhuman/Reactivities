@@ -5,54 +5,63 @@ namespace Reactivities.Api.Extensions
     using System.Security.Claims;
     using Domain;
     using Infrastructure.Authorization;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Persistence;
-    using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
     public static class AuthorizationExtensions
     {
-        private const string DefaultScheme = "DefaultScheme";
-
         public static IApplicationBuilder UseConfiguredAuthorization(this IApplicationBuilder app) =>
             app.UseAuthentication()
                 .UseAuthorization();
 
         public static IServiceCollection AddCustomAuthorization(this IServiceCollection services,
-            AccessTokenProviderOptions options, IConfiguration configuration) =>
-            services.Configure<AccessTokenProviderOptions>(nameof(AccessTokenProviderOptions),
-                    providerOptions => configuration.Bind(nameof(AccessTokenProviderOptions), providerOptions))
-                .AddIdentityCore<User>()
-                .AddSignInManager()
-                .AddEntityFrameworkStores<DataContext>()
-                .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<User>>()
-                .AddDefaultTokenProviders()
-                .Services
-                .AddAuthentication(configure => configure.DefaultScheme = DefaultScheme)
+            AccessTokenProviderOptions options) =>
+            services.AddSingleton(options)
+                .AddJwt(options)
+                .AddMyIdentity();
+
+
+        public static IServiceCollection AddJwt(this IServiceCollection services,
+            AccessTokenProviderOptions options) =>
+            services
+                .AddAuthentication(configure => configure.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(bearerOptions =>
                 {
-                    bearerOptions.Audience = options.Audience;
-                    bearerOptions.ClaimsIssuer = options.Issuer;
+                    bearerOptions.IncludeErrorDetails = true;
+                    bearerOptions.RequireHttpsMetadata = false;
                     bearerOptions.TokenValidationParameters = new()
                     {
+                        IssuerSigningKey = options.SymmetricSecurityKey,
                         ValidIssuer = options.Issuer,
+                        ValidAudience = options.Audience,
                         ClockSkew = TimeSpan.Zero,
-                        ValidAudience = options.Audience
+                        ValidateLifetime = true
                     };
                 })
                 .Services
                 .AddAuthorization(authorizationOptions =>
                 {
-                    authorizationOptions.AddPolicy(DefaultScheme, builder =>
-                    {
-                        builder.RequireClaim(ClaimTypes.NameIdentifier);
-                        builder.RequireClaim(ClaimTypes.Name);
-                        builder.RequireAuthenticatedUser();
-                    });
+                    var defaultPolicyBuilder = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme);
+                    defaultPolicyBuilder.RequireClaim(ClaimTypes.NameIdentifier);
+                    defaultPolicyBuilder.RequireClaim(ClaimTypes.Name);
+                    authorizationOptions.DefaultPolicy = defaultPolicyBuilder.Build();
                 })
                 .AddSingleton<JwtSecurityTokenHandler>()
                 .AddScoped<IAccessTokenProvider, AccessTokenProvider>();
+    }
+
+    public static class IdentityExtensions
+    {
+        public static IServiceCollection AddMyIdentity(this IServiceCollection services) =>
+            services.AddIdentityCore<User>()
+                .AddSignInManager()
+                .AddEntityFrameworkStores<DataContext>()
+                .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<User>>()
+                .AddDefaultTokenProviders()
+                .Services;
     }
 }

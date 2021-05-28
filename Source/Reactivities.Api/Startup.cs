@@ -48,7 +48,7 @@ namespace Reactivities.Api
                 .AddConfiguredCors(_configuration)
                 .AddMediatR(Assembly.Load("Reactivities.Application"))
                 .AddAutoMapper(expression => expression.AddMaps(Assembly.Load("Reactivities.Application"), Assembly.Load("Reactivities.Api")))
-                .AddCustomAuthorization(_accessTokenProviderOptions, _configuration);
+                .AddCustomAuthorization(_accessTokenProviderOptions);
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
