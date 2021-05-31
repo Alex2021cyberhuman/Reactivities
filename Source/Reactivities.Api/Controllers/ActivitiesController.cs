@@ -6,9 +6,11 @@ namespace Reactivities.Api.Controllers
     using Application.Activities;
     using Base;
     using Domain;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
+    [Authorize]
     public class ActivitiesController : ApiController
     {
         [HttpGet(Name = nameof(GetActivityList))]

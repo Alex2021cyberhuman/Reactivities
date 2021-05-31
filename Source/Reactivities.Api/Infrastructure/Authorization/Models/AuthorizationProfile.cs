@@ -8,6 +8,7 @@
         public AuthorizationProfile()
         {
             CreateMap<UserRegisterRequest, User>();
+            CreateMap<User, UserResponse>();
         }
     }
 }

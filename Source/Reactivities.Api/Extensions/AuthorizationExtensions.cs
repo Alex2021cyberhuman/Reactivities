@@ -5,6 +5,7 @@ namespace Reactivities.Api.Extensions
     using System.Security.Claims;
     using Domain;
     using Infrastructure.Authorization;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Configuration;
@@ -30,7 +31,7 @@ namespace Reactivities.Api.Extensions
                 .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<User>>()
                 .AddDefaultTokenProviders()
                 .Services
-                .AddAuthentication(configure => configure.DefaultScheme = DefaultScheme)
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(bearerOptions =>
                 {
                     bearerOptions.Audience = options.Audience;

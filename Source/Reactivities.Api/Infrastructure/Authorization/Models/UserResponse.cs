@@ -1,7 +1,11 @@
-namespace Reactivities.Api.Infrastructure.Authorization.Models
+﻿namespace Reactivities.Api.Infrastructure.Authorization.Models
 {
-    public record UserRegisterRequest
+    using System;
+
+    public record UserResponse
     {
+        public Guid Id { get; set; }
+
         public string UserName { get; init; }
         
         public string DisplayName { get; init; }
