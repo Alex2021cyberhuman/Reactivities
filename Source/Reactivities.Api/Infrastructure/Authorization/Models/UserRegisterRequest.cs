@@ -9,7 +9,5 @@ namespace Reactivities.Api.Infrastructure.Authorization.Models
         public string Email { get; init; }
 
         public string Password { get; init; }
-
-        public string ImageUrl { get; init; }
     }
 }

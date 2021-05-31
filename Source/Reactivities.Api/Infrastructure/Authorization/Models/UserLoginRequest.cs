@@ -1,4 +1,4 @@
-﻿namespace Reactivities.Api.Infrastructure.Authorization.Models
+namespace Reactivities.Api.Infrastructure.Authorization.Models
 {
     public record UserLoginRequest
     {
