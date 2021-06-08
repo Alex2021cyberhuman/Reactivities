@@ -1,4 +1,4 @@
-﻿import {makeAutoObservable} from "mobx";
+import {makeAutoObservable} from "mobx";
 import LoginModel from "../../models/LoginModel";
 import User from "../../models/User";
 import client from "../api/client";
@@ -27,6 +27,8 @@ class UserStore {
     login = async (model: LoginModel) => {
         const {token} = await client.account.login(model);
         client.account.setBearer(token);
-        const user = await client.account.getCurrent()
+        this.current = await client.account.getCurrent();
     }
 }
+
+export default UserStore;

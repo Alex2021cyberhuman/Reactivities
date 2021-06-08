@@ -5,6 +5,7 @@ import {toast} from "react-toastify";
 import {getNewValidationError} from "../../features/errors/ValidationErrors";
 import LoginModel from "../../models/LoginModel";
 import AccessTokenResponse from "../../models/AccessTokenResponse";
+import User from "../../models/User";
 
 const ACCESS_TOKEN = 'accessToken';
 const BASE_URL = 'http://localhost:5000/api/';
@@ -81,7 +82,7 @@ const account = {
     setBearer(token: string) {
         localStorage.setItem(ACCESS_TOKEN, token);
     },
-    getCurrent: () =>requests.get
+    getCurrent: () => requests.get<User>("Account")
 }
 
 const client = {

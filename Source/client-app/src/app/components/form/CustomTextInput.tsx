@@ -4,9 +4,10 @@ import {Form, Input, Label, Message} from "semantic-ui-react";
 interface Props {
     label: string;
     name: string;
+    type?: string;
 }
 
-const CustomTextInput = (props: Props) => {
+const CustomTextInput = (props: Props) => { 
     const [field, meta] = useField<string>(props.name);
     return (
         <>

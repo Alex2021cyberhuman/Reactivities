@@ -8,6 +8,7 @@ import ActivityDetailsPage from "../../features/activities/details/ActivityDetai
 import ActivityForm from "../../features/activities/form/ActivityForm";
 import NotFound from "../../features/errors/NotFound";
 import {useStore} from "../store";
+import LoginForm from "../../features/user/login/LoginForm";
 
 const App = () => { 
     const {activities: {loadActivities, activities}} = useStore();
@@ -37,6 +38,9 @@ const App = () => {
                         </Route>
                         <Route path='/activities'>
                             <ActivityDashboardPage/>
+                        </Route>
+                        <Route path='/login'>
+                            <LoginForm/>
                         </Route>
                         <Route>
                             <NotFound/>
