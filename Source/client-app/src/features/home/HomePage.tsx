@@ -1,5 +1,6 @@
 import {Container, Header, Segment, Image, Button} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
+import {stringify} from "query-string";
 
 export const HomePage = () => {
     return (
@@ -10,9 +11,8 @@ export const HomePage = () => {
                     Reactivities
                 </Header>
                 <Header as='h2' inverted>Welcome to Reactivities</Header>
-                <Button color='blue' inverted as={NavLink} to='/activities'>Take me to activities</Button>
             </Container>
         </Segment>
-        
+
     )
 }

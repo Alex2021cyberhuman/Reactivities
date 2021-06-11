@@ -5,8 +5,10 @@ import {observer} from "mobx-react-lite";
 import {useStore} from "../../../app/store";
 import Loading from "../../../app/components/Loading";
 import ActivityFilters from "./ActivityFilters";
+import useRedirectToLogin from "../../../app/hocks/useRedirectToLogin";
 
 const ActivityDashboardPage = observer(() => {
+    useRedirectToLogin();
     const {activities: {loadActivities, initialLoading}} = useStore();
     
     useEffect(() => {

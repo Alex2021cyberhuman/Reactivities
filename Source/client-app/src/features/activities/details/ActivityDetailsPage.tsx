@@ -9,8 +9,10 @@ import ActivityDetailsInfo from "./ActivityDetailsInfo";
 import ActivityDetailsChat from "./ActivityDetailsChat";
 import ActivityDetailsSidebar from "./ActivityDetailsSidebar";
 import {useStore} from "../../../app/store";
+import useRedirectToLogin from "../../../app/hocks/useRedirectToLogin";
 
-const ActivityDetailsPage = observer(() => {    
+const ActivityDetailsPage = observer(() => {   
+    useRedirectToLogin();
     const {activities} = useStore();
     const {id} = useParams<{ id: string }>();
     const [activity, setActivity] = useState<Activity | undefined>(undefined);

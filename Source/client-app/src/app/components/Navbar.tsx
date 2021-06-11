@@ -1,5 +1,6 @@
 import {Button, Container, Image, Menu} from "semantic-ui-react";
 import {NavLink} from "react-router-dom";
+import ProfileNavbarPart from "./profile/ProfileNavbarPart";
 
 const Navbar = () => {
     return (
@@ -28,7 +29,8 @@ const Navbar = () => {
                             to={'/activities/create'}>
                         Create Activity
                     </Button>
-                </Menu.Item>    
+                </Menu.Item>
+                <ProfileNavbarPart/>
             </Container>
             
         </Menu>

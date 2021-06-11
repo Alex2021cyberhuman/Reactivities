@@ -1,18 +1,23 @@
 ﻿namespace Reactivities.Persistence.Infrastructure
 {
+    using System;
     using System.Threading.Tasks;
+    using Domain;
     using Interfaces;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     public sealed class MigrationService : IMigrationService
     {
         private readonly DataContext _context;
         private readonly IDataCreator _data;
+        private readonly UserManager<User> _userManager;
 
-        public MigrationService(DataContext context, IDataCreator data)
+        public MigrationService(DataContext context, IDataCreator data, UserManager<User> userManager)
         {
             _context = context;
             _data = data;
+            _userManager = userManager;
         }
 
         public async Task MigrateAsync()
@@ -22,7 +27,12 @@
             if (isCreated)
                 return;
             await _context.Activities.AddRangeAsync(_data.Activities);
-            await _context.Users.AddRangeAsync(_data.Users);
+            foreach (var user in _data.Users)
+            {
+                var result = await _userManager.CreateAsync(user);
+                if (!result.Succeeded)
+                    throw new ApplicationException(result.ToString());
+            }
             await _context.SaveChangesAsync();
         }
 

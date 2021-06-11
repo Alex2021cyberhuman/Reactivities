@@ -13,12 +13,14 @@ import CustomDatePicker from "../../../app/components/form/CustomDatePicker";
 import {getCategoryList, getCategoryOptions} from "../../../models/Categories";
 import * as Yup from "yup";
 import CustomTextArea from "../../../app/components/form/CustomTextArea";
+import useRedirectToLogin from "../../../app/hocks/useRedirectToLogin";
 
 interface Props {
     create?: boolean;
 }
 
 const ActivityForm = observer(({create = true}: Props) => {
+    useRedirectToLogin();
     const history = useHistory<any>();
     const {id} = useParams<{ id: string | undefined }>();
     const [activity, setActivity] = useState<Activity>(empty());

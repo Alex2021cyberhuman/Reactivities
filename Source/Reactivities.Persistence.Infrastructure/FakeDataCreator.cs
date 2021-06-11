@@ -48,8 +48,10 @@
             .Rules(((faker, user) =>
             {
                 user.Email = faker.Internet.Email();
+                user.NormalizedEmail = user.Email.Normalize().ToUpperInvariant();
                 user.DisplayName = faker.Internet.UserName();
                 user.UserName = faker.Internet.UserName(user.DisplayName, user.Email);
+                user.NormalizedUserName = user.UserName.Normalize().ToUpperInvariant();
                 user.ImageUrl = faker.Image.PicsumUrl();
                 user.PhoneNumber = faker.Phone.PhoneNumber();
                 user.PasswordHash = _passwordHasher.HashPassword(user, StandardPassword);
